@@ -2,13 +2,17 @@ package org.example._002.controllers;
 
 import org.example._002.dto.EventiDTO;
 import org.example._002.entities.Eventi;
+import org.example._002.exceptions.ValidationExceptions;
 import org.example._002.services.EventiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/eventi")
@@ -36,8 +40,16 @@ public class EventiController {
     @PreAuthorize("hasAnyAuthority('ORGANIZZATORE')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Eventi save(@RequestBody @Validated EventiDTO payload) {
-        return this.es.save(payload);
+    public Eventi save(@RequestBody @Validated EventiDTO payload, BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            List<String> errorsList = validationResult.getFieldErrors()
+                    .stream()
+                    .map(fieldError -> fieldError.getDefaultMessage())
+                    .toList();
+            throw new ValidationExceptions(errorsList);
+        } else {
+            return this.es.save(payload);
+        }
     }// http://localhost:3001/eventi
 
     @PreAuthorize("hasAnyAuthority('ORGANIZZATORE')")
