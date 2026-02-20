@@ -17,10 +17,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsersService {
     private final UserRepo ur;
+    private final PasswordEncoder bcrypt;
 
     @Autowired
     public UsersService(UserRepo ur, PasswordEncoder passwordEncoder) {
         this.ur = ur;
+        this.bcrypt = passwordEncoder;
 
     }
 
@@ -39,7 +41,7 @@ public class UsersService {
     }
 
     public Users save(UsersDTO payload) {
-        Users nUser = new Users(payload.username(), payload.email(), payload.password(), payload.role());
+        Users nUser = new Users(payload.username(), payload.email(), bcrypt.encode(payload.password()), payload.role());
         this.ur.findByEmail(payload.email()).ifPresent(u -> {
             throw new AlreadyExsists("La mail è già registrata");
         });
