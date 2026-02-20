@@ -27,11 +27,12 @@ public class Eventi {
     public Eventi(String location, LocalDate data, boolean disponibile) {
         this.id = UUID.randomUUID().toString();
         this.location = location;
-        if (this.data.isBefore(LocalDate.now())) {
+        if (data.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("La data non può essre anteriore a quella attuale!");
-        } else {
-            this.data = data;
         }
+        ;
+        this.data = data;
+
         ;
         this.disponibile = disponibile;
     }

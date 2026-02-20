@@ -56,7 +56,7 @@ public class UsersService {
         Users f = this.findById(id);
         f.setEmail(payload.email());
         f.setUsername(payload.username());
-        f.setPassword(payload.password());
+        f.setPassword(bcrypt.encode(payload.password()));
         f.setRole(payload.role());
         return this.ur.save(f);
     }
