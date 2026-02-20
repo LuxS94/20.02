@@ -1,9 +1,6 @@
 package org.example._002.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import org.example._002.entities.Role;
 
 public record UsersDTO(
@@ -11,6 +8,6 @@ public record UsersDTO(
         @Email(message = "Email inserita non valida!")
         String email, @Pattern(
         regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$", message = "La password deve contenere almeno una maiuscola,un numero,un carattere speciale,e deve essere lunga almeno 8 caratteri!") String password,
-        @NotBlank(message = "Impostare un ruolo è obbligatorio!")
+        @NotNull(message = "Impostare un ruolo è obbligatorio!")
         Role role) {
 }

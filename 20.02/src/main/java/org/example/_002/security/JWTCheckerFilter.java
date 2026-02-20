@@ -11,10 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+
+@Component
 public class JWTCheckerFilter extends OncePerRequestFilter {
     private final JWTTools jwtTools;
     private final UsersService us;
@@ -27,12 +30,15 @@ public class JWTCheckerFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        if (request.getRequestURI().startsWith("/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         String userHeader = request.getHeader("Authorization");
         if (userHeader == null || !userHeader.startsWith("Bearer "))
             throw new UnauthorizedException("Inserire il token nel formato corretto");
         String Token = userHeader.replace("Bearer ", "");
         jwtTools.verifyToken(Token);
-        filterChain.doFilter(request, response);
 
 
         String userid = jwtTools.extractIdFromToken(Token);

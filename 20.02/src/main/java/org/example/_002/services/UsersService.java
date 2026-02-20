@@ -58,13 +58,6 @@ public class UsersService {
         f.setUsername(payload.username());
         f.setPassword(payload.password());
         f.setRole(payload.role());
-        this.ur.findByEmail(payload.email()).ifPresent(u -> {
-            throw new AlreadyExsists("La mail è già registrata");
-        });
-        this.ur.findByUsername(payload.username()).ifPresent(u -> {
-            throw new AlreadyExsists("L'username esiste già !");
-        });
-
         return this.ur.save(f);
     }
 

@@ -1,9 +1,6 @@
 package org.example._002.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +16,8 @@ public class Eventi {
     private boolean disponibile;
     @OneToMany(mappedBy = "evento")
     private List<Prenotazioni> prenotazioni;
+    @ManyToOne
+    private Users organizzatore;
 
     public Eventi() {
     }

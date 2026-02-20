@@ -7,6 +7,7 @@ import org.example._002.exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.Date;
 
 @Component
@@ -16,9 +17,11 @@ public class JWTTools {
 
 
     public String generateToken(Users user) {
+        Date now = new Date();
+        Date expiration = new Date(now.getTime() + Duration.ofDays(30).toMillis());
         return Jwts.builder()
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 30))
+                .expiration(expiration)
                 .subject(String.valueOf(user.getId()))
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
                 .compact();
@@ -30,6 +33,7 @@ public class JWTTools {
             Jwts.parser().verifyWith(Keys.hmacShaKeyFor(secret.getBytes())).build().parse(token);
 
         } catch (Exception ex) {
+            //   ex.printStackTrace();// x verificare cause se non va token
             throw new UnauthorizedException("Token non valido");
         }
 
