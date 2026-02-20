@@ -36,6 +36,9 @@ public class PrenotazioniService {
         this.pr.findByEventoAndPrenotante(payload.evento().getId(), payload.prenotante().getId()).ifPresent(u -> {
             throw new AlreadyExsists("La prenotazione esiste già!");
         });
+        if (!payload.evento().isDisponibile()) {
+            throw new NotFoundException("L'evento non è più disponibile");
+        }
         return this.pr.save(nEvent);
     }
 
