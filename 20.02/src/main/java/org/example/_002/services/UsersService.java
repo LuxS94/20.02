@@ -1,5 +1,6 @@
 package org.example._002.services;
 
+import org.example._002.dto.RoleDTO;
 import org.example._002.dto.UsersDTO;
 import org.example._002.entities.Users;
 import org.example._002.exceptions.AlreadyExsists;
@@ -69,6 +70,12 @@ public class UsersService {
         Users f = this.findById(id);
         this.ur.delete(f);
 
+    }
+
+    public Users setRoleById(String id, RoleDTO role) {
+        Users f = this.findById(id);
+        f.setRole(role.role());
+        return this.ur.save(f);
     }
 
 
